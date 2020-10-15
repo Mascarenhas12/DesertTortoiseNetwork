@@ -32,3 +32,36 @@ def parse_graphs_year(path: str, start_year: int, end_year: int) -> dict:
             sub.add_edges_from(edges)
             graphs[i] = sub
     return graphs
+
+
+def averageDegree(graph: nx.Graph) -> float:
+    degrees = graph.degree()
+    if not len(degrees):
+        return 0
+
+    degSum = sum([n for _, n in degrees])
+    return degSum / len(degrees)
+
+
+def degreeDistributionHist(graph: nx.Graph) -> None:
+
+    degree_sequence = sorted([d for _, d in graph.degree()], reverse=True)
+    degreeCount = collections.Counter(degree_sequence)
+    deg, cnt = zip(*degreeCount.items())
+    prob = [cnt[i] / len(degree_sequence) for i in range(len(cnt))]
+
+    fig, ax = plt.subplots()
+    plt.bar(deg, prob, width=0.80, color="b")
+    #plt.plot(deg, prob, color="black")
+    ax.set_xticks([d for d in deg])
+    ax.set_xticklabels(deg)
+
+    plt.title("Degree Histogram")
+    plt.ylabel("Probability")
+    plt.xlabel("Degree")
+    plt.show()
+
+
+def APLConnectedComponents(graph: nx.Graph) -> int:
+    gph = graph.subgraph(sorted(nx.connected_components(graph), key=len, reverse=True)[0])
+    return nx.average_shortest_path_length(gph)
