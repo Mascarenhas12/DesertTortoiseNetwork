@@ -25,7 +25,7 @@ def add_degree_label(G: nx.Graph, pos: dict) -> None:
     nx.draw_networkx_labels(G, pos, labels, font_size=16, font_color="white")
 
 
-def add_edge_label(g: nx.Graph, pos:dict) -> None:
+def add_edge_label(g: nx.Graph, pos: dict) -> None:
     label = {}
 
     for edge in g.edges(data=True):
@@ -75,7 +75,8 @@ def graph_display(G: nx.Graph, options: dict) -> None:
     plt.axis("off")
     plt.show()
 
-def averageDegree(graph: nx.Graph) -> float:
+
+def average_degree(graph: nx.Graph) -> float:
     degrees = graph.degree()
     if not len(degrees):
         return 0
@@ -84,8 +85,7 @@ def averageDegree(graph: nx.Graph) -> float:
     return degSum / len(degrees)
 
 
-def degreeDistributionHist(graph: nx.Graph) -> None:
-
+def degree_distribution_hist(graph: nx.Graph) -> None:
     degree_sequence = sorted([d for _, d in graph.degree()], reverse=True)
     degreeCount = collections.Counter(degree_sequence)
     deg, cnt = zip(*degreeCount.items())
@@ -93,7 +93,7 @@ def degreeDistributionHist(graph: nx.Graph) -> None:
 
     fig, ax = plt.subplots()
     plt.bar(deg, prob, width=0.80, color="b")
-    #plt.plot(deg, prob, color="black")
+    # plt.plot(deg, prob, color="black")
     ax.set_xticks([d for d in deg])
     ax.set_xticklabels(deg)
 
@@ -103,18 +103,17 @@ def degreeDistributionHist(graph: nx.Graph) -> None:
     plt.show()
 
 
-def APLConnectedComponents(graph: nx.Graph) -> int:
+def APL_connected_components(graph: nx.Graph) -> int:
     gph = graph.subgraph(sorted(nx.connected_components(graph), key=len, reverse=True)[0])
     return nx.average_shortest_path_length(gph)
 
 
-def temporalAnalysis(graphs: dict) -> None:
-
+def temporal_analysis(graphs: dict) -> None:
     avgDeg, avgClu, avgAPL = [], [], []
     for year in graphs.keys():
-        avgDeg.append(averageDegree(graphs.get(year)))
+        avgDeg.append(average_degree(graphs.get(year)))
         avgClu.append(nx.average_clustering(graphs.get(year)))
-        avgAPL.append(APLConnectedComponents(graphs.get(year)))
+        avgAPL.append(APL_connected_components(graphs.get(year)))
 
     line1, = plt.plot(list(graphs.keys()), avgDeg, label="Average Degree")
     plt.plot(list(graphs.keys()), avgClu, label="Average Clustering Coefficient")
