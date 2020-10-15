@@ -3,6 +3,8 @@ import networkx as nx
 import numpy as np
 import collections
 
+from matplotlib.legend_handler import HandlerLine2D
+
 
 def graph_inline(G: nx.Graph, pos: dict) -> None:
     # draw graph in inset
@@ -104,3 +106,21 @@ def degreeDistributionHist(graph: nx.Graph) -> None:
 def APLConnectedComponents(graph: nx.Graph) -> int:
     gph = graph.subgraph(sorted(nx.connected_components(graph), key=len, reverse=True)[0])
     return nx.average_shortest_path_length(gph)
+
+
+def temporalAnalysis(graphs: dict) -> None:
+
+    avgDeg, avgClu, avgAPL = [], [], []
+    for year in graphs.keys():
+        avgDeg.append(averageDegree(graphs.get(year)))
+        avgClu.append(nx.average_clustering(graphs.get(year)))
+        avgAPL.append(APLConnectedComponents(graphs.get(year)))
+
+    line1, = plt.plot(list(graphs.keys()), avgDeg, label="Average Degree")
+    plt.plot(list(graphs.keys()), avgClu, label="Average Clustering Coefficient")
+    plt.plot(list(graphs.keys()), avgAPL, label="Average Path Length")
+
+    plt.legend(handler_map={line1: HandlerLine2D(numpoints=4)})
+    plt.yticks(np.arange(0, max(avgAPL) + 1, 0.5))
+
+    plt.show()
