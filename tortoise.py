@@ -9,7 +9,9 @@ def graph_inline(G: nx.Graph, pos: dict) -> None:
     degrees = G.degree()  # Dict with Node ID, Degree
     nodes = G.nodes()
     n_color = np.asarray([degrees[n] for n in nodes])
-    nx.draw_networkx_nodes(G, pos, nodelist=nodes, node_color=n_color, node_size=200, cmap="Blues")
+    nx.draw_networkx_nodes(G, pos, nodelist=nodes,
+                           node_color=n_color, node_size=200,
+                           cmap="Blues", vmin=-8)
     nx.draw_networkx_edges(G, pos, alpha=0.4)
 
 
@@ -18,7 +20,7 @@ def add_degree_label(G: nx.Graph, pos: dict) -> None:
 
     for node in G.nodes():
         labels[node] = G.degree[node]
-    nx.draw_networkx_labels(G, pos, labels, font_size=16)
+    nx.draw_networkx_labels(G, pos, labels, font_size=16, font_color="white")
 
 
 def parse_graphs_year(path: str, start_year: int, end_year: int) -> dict:
@@ -33,6 +35,17 @@ def parse_graphs_year(path: str, start_year: int, end_year: int) -> dict:
             graphs[i] = sub
     return graphs
 
+
+def graph_display(G: nx.Graph, options: dict) -> None:
+    pos = nx.spring_layout(G, k=0.8)
+
+    if options.get("inline"):
+        graph_inline(G, pos)
+    if options.get("labeled"):
+        add_degree_label(G, pos)
+
+    plt.axis("off")
+    plt.show()
 
 def averageDegree(graph: nx.Graph) -> float:
     degrees = graph.degree()
