@@ -23,11 +23,36 @@ def add_degree_label(G: nx.Graph, pos: dict) -> None:
     nx.draw_networkx_labels(G, pos, labels, font_size=16, font_color="white")
 
 
+def add_edge_label(g: nx.Graph, pos:dict) -> None:
+    label = {}
+
+    for edge in g.edges(data=True):
+        label[(edge[0], edge[1])] = edge[2].get("weight")
+    nx.draw_networkx_edge_labels(g, pos, label, font_size=8)
+
+
+def parse_input_weights(file_name: str) -> None:
+    edges = {}
+
+    with open(file_name, 'r') as file:
+        lines = [n[:-1] for n in file.readlines()]
+        for line in lines:
+            if line in edges:
+                edges[line] += 1
+            else:
+                edges[line] = 1
+
+    name, extension = file_name.split(".")
+    f = open(name + "-parsed." + extension, "w")
+    for key in edges.keys():
+        f.write(key + " " + str(edges[key]) + "\n")
+
+
 def parse_graphs_year(path: str, start_year: int, end_year: int) -> dict:
     graphs = {}
     with open(path, 'r') as file:
         lines = [n[:-1] for n in file.readlines()]
-        G = nx.parse_edgelist(lines, nodetype=int, data=(("year", int),))
+        G = nx.parse_edgelist(lines, nodetype=int, data=(("year", int), ("weight", int),))
         for i in range(start_year, end_year + 1):
             edges = [n for n in G.edges(data=True) if n[2].get("year") == i]
             sub = nx.Graph()
@@ -43,6 +68,7 @@ def graph_display(G: nx.Graph, options: dict) -> None:
         graph_inline(G, pos)
     if options.get("labeled"):
         add_degree_label(G, pos)
+        add_edge_label(G, pos)
 
     plt.axis("off")
     plt.show()
