@@ -12,7 +12,7 @@ def graph_inline(G: nx.Graph, pos: dict) -> None:
     nodes = G.nodes()
     n_color = np.asarray([degrees[n] for n in nodes])
     nx.draw_networkx_nodes(G, pos, nodelist=nodes,
-                           node_color=n_color, node_size=200,
+                           node_color=n_color, node_size=300,
                            cmap="Blues", vmin=-8)
     nx.draw_networkx_edges(G, pos, alpha=0.4)
 
@@ -63,16 +63,19 @@ def parse_graphs_year(path: str, start_year: int, end_year: int) -> dict:
     return graphs
 
 
-def graph_display(G: nx.Graph, options: dict) -> None:
+def graph_display(G: nx.Graph, year: int, options: dict) -> None:
     pos = nx.spring_layout(G, k=0.8)
+    plt.figure(figsize=(18, 18))
 
     if options.get("inline"):
         graph_inline(G, pos)
-    if options.get("labeled"):
+    if options.get("node_labeled"):
         add_degree_label(G, pos)
+    if options.get("edge_labeled"):
         add_edge_label(G, pos)
 
     plt.axis("off")
+    plt.savefig("results/GD_{}.png".format(year))
     plt.show()
 
 
@@ -85,7 +88,7 @@ def average_degree(graph: nx.Graph) -> float:
     return degSum / len(degrees)
 
 
-def degree_distribution_hist(graph: nx.Graph) -> None:
+def degree_distribution_hist(graph: nx.Graph, year: int) -> None:
     degree_sequence = sorted([d for _, d in graph.degree()], reverse=True)
     degreeCount = collections.Counter(degree_sequence)
     deg, cnt = zip(*degreeCount.items())
@@ -93,13 +96,13 @@ def degree_distribution_hist(graph: nx.Graph) -> None:
 
     fig, ax = plt.subplots()
     plt.bar(deg, prob, width=0.80, color="b")
-    # plt.plot(deg, prob, color="black")
     ax.set_xticks([d for d in deg])
     ax.set_xticklabels(deg)
 
-    plt.title("Degree Histogram")
+    plt.title("Degree Distribution of year {}".format(year))
     plt.ylabel("Probability")
     plt.xlabel("Degree")
+    plt.savefig("results/DD_{}.png".format(year))
     plt.show()
 
 
@@ -121,5 +124,5 @@ def temporal_analysis(graphs: dict) -> None:
 
     plt.legend(handler_map={line1: HandlerLine2D(numpoints=4)})
     plt.yticks(np.arange(0, max(avgAPL) + 1, 0.5))
-
+    plt.savefig("results/TA.png")
     plt.show()
