@@ -10,8 +10,10 @@ The corresponding graph and a Histogram of the Degree Distribution will be displ
 
 
 In order to run this analysis on a dataset:
-* Insure that the data file has this format `node1 node2 year`
-* Run the file `src/main.py [Path_of_Data_File] [Starting_Year] [End_Year]`
+* Ensure that the data file has each edge represented in a line with this format `node1 node2 year`
+* The dataset file must be in the project's main folder
+* Enter the `src` folder
+* Run the file `main.py [Path_of_Data_File] [Starting_Year] [End_Year]`
 
 The files of the graphs will be saved to the folder `results`. The filenames of the saved files will have the following format:
 * `DD_[Year]`, Degree Distribution Graph of a specific [Year] 
@@ -27,4 +29,4 @@ The files of the graphs will be saved to the folder `results`. The filenames of 
 | Sara Machado | Instituto Superior Técnico | 86923 | sara.f.machado@tecnico.ulisboa.pt |
 | João Galamba | Instituto Superior Técnico | 90735 | joao.catarino.g@tecnico.ulisboa.pt |
 | Manuel Mascarenhas | Instituto Superior Técnico | 90751 | manuel.d.mascarenhas@tecnico.ulisboa.pt |
-|
+
