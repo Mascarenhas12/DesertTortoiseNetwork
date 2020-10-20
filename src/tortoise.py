@@ -33,10 +33,10 @@ def add_edge_label(g: nx.Graph, pos: dict) -> None:
     nx.draw_networkx_edge_labels(g, pos, label, font_size=8)
 
 
-def parse_input_weights(file_name: str) -> None:
+def parse_input_weights(file_name: str) -> str:
     edges = {}
 
-    with open(file_name, 'r') as file:
+    with open("../" + file_name, 'r') as file:
         lines = [n[:-1] for n in file.readlines()]
         for line in lines:
             if line in edges:
@@ -45,9 +45,10 @@ def parse_input_weights(file_name: str) -> None:
                 edges[line] = 1
 
     name, extension = file_name.split(".")
-    f = open(name + "-parsed." + extension, "w")
+    f = open("../" + name + "-parsed." + extension, "w")
     for key in edges.keys():
         f.write(key + " " + str(edges[key]) + "\n")
+    return "../" + name + "-parsed." + extension
 
 
 def parse_graphs_year(path: str, start_year: int, end_year: int) -> dict:
@@ -75,7 +76,7 @@ def graph_display(G: nx.Graph, year: int, options: dict) -> None:
         add_edge_label(G, pos)
 
     plt.axis("off")
-    plt.savefig("results/GD_{}.png".format(year))
+    plt.savefig("../results/GD_{}.png".format(year))
     plt.show()
 
 
@@ -102,7 +103,7 @@ def degree_distribution_hist(graph: nx.Graph, year: int) -> None:
     plt.title("Degree Distribution of year {}".format(year))
     plt.ylabel("Probability")
     plt.xlabel("Degree")
-    plt.savefig("results/DD_{}.png".format(year))
+    plt.savefig("../results/DD_{}.png".format(year))
     plt.show()
 
 
@@ -124,5 +125,5 @@ def temporal_analysis(graphs: dict) -> None:
 
     plt.legend(handler_map={line1: HandlerLine2D(numpoints=4)})
     plt.yticks(np.arange(0, max(avgAPL) + 1, 0.5))
-    plt.savefig("results/TA.png")
+    plt.savefig("../results/TA.png")
     plt.show()
